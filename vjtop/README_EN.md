@@ -1,24 +1,25 @@
 # VJtop 
  
-VJtop serves as a Linux top-like JVM info and busy thread monitoring tool.
+VJtop is a JVM monitoring tool to provide a dynamic real-time view of the busiest ten threads, which plays the similar role of the "top" command for viewing the host operation system.
 
 # 1. Introduction
 
-We believe readers are familiar with the linux "top" command. And we recommend VJtop to you for monitoring CPU/Memory intensive threads within JVM. Forked from the [jvmtop](https://github.com/patric-r/jvmtop) project, 
-VJtop comes with additional features of its own as well as incorporating some nice facilities from the [SJK](https://github.com/aragozin/jvm-tools) project.
-Rich information is collected from /proc, PerfData and JMX in a performant way.
+VJtop allows to display process summary information of current CPU/Memory intensive threads within JVM.  Using the information collected from /proc 、PerfData and JMX, VJtop is originally forked from the jvmtop project but added many new features by exploiting nice properties of the SJK project. The usage of VJtop offers a highly smooth user experience. 
+
+[jvmtop](https://github.com/patric-r/jvmtop)
+
+[SJK](https://github.com/aragozin/jvm-tools)
 
 VJtop is built as NON stop-the-world and is considered ready for production diagnostics.
 
 
 # 2. Getting Started
 
-## 2.1 How to build
+## 2.1 How to run
 
-Run Maven install task and unzip the resulted zip package in the target folder. Set JAVA_HOME environment variable to your JDK directory.
+[Download vjtop－1.0.4.zip](http://repo1.maven.org/maven2/com/vip/vjtools/vjtop/1.0.4/vjtop-1.0.4.zip)(from Maven Central)
 
-Run the following command under **the same user who started the target process**. If access errors are met, 
-try again with root user.
+Run the following command under **the same user who started the target process**.
 
 ```
 // showing threads consuming the most cpu
@@ -32,7 +33,7 @@ try again with root user.
 Process data are retrieved
 
 *   from /proc/PID/*
-*   from /tmp/perfxxxx, where stats are written by JDK every other second
+*   from /tmp/hsperfxxxx, where stats are written by JDK every other second
 *   from JMX of the targeted VM. (If JMX isn't started at the time
 VJtop will try to attach to the process to start JMX).
 

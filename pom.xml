@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -9,7 +8,7 @@
 
 	<groupId>com.vip.vjtools</groupId>
 	<artifactId>vjtools</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<name>vjtools</name>
 	<packaging>pom</packaging>
 
@@ -17,15 +16,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.locale>zh_CN</project.build.locale>
-		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 	</properties>
 
-	<modules>
-		<module>vjmap</module>
-		<module>vjtop</module>
-		<module>vjkit</module>
-	</modules>
 
 	<distributionManagement>
 		<snapshotRepository>
@@ -38,27 +30,70 @@
 		</repository>
 	</distributionManagement>
 
-	<url>https://github.com/vipshop/vjtools</url>
-
-	<licenses>
-		<license>
-			<name>Apache License 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-
 	<profiles>
 		<profile>
+			<id>jdk7</id>
+			<activation>
+				<jdk>1.7</jdk>
+			</activation>
+			<modules>
+				<module>vjkit</module>
+				<module>vjstar</module>
+				<module>vjmap</module>
+				<module>vjtop</module>
+				<module>vjmxcli</module>
+			</modules>
+		</profile>
+
+		<profile>
+			<id>jdk8</id>
+			<activation>
+				<jdk>1.8</jdk>
+			</activation>
+			<modules>
+				<module>vjkit</module>
+				<module>vjstar</module>
+				<module>vjmap</module>
+				<module>vjtop</module>
+				<module>vjmxcli</module>
+				<module>standard/sonar-vj</module>
+			</modules>
+		</profile>
+
+		<profile>
+			<id>jdk9</id>
+			<activation>
+				<jdk>9</jdk>
+			</activation>
+			<modules>
+				<module>vjkit</module>
+				<module>vjstar</module>
+			</modules>
+		</profile>
+
+		<profile>
 			<id>release</id>
+			<modules>
+				<module>vjkit</module>
+				<module>vjmap</module>
+				<module>vjtop</module>
+				<module>vjmxcli</module>
+			</modules>
 			<build>
 				<plugins>
-					<!-- javadoc attach plugin -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>2.5.3</version>
+						<configuration>
+							<tagNameFormat>v.@{project.version}</tagNameFormat>
+						 </configuration>
+					</plugin>
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>${maven-gpg-plugin.version}</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -72,15 +107,28 @@
 				</plugins>
 			</build>
 		</profile>
+
 	</profiles>
 
 	<scm>
 		<connection>scm:git:https://github.com/vipshop/vjtools.git</connection>
 		<developerConnection>scm:git:https://github.com/vipshop/vjtools.git</developerConnection>
 		<url>https://github.com/vipshop/vjtools</url>
-	</scm>
+	  <tag>v.1.0.2</tag>
+  </scm>
+
+	<url>https://github.com/vipshop/vjtools</url>
+
+	<licenses>
+		<license>
+			<name>Apache License 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<developers>
+		<!--not noly me, write a name here just for sonatype requirement -->
 		<developer>
 			<id>calvin</id>
 			<name>Calvin Xiao</name>
@@ -90,15 +138,5 @@
 			</roles>
 			<timezone>+8</timezone>
 		</developer>
-		<developer>
-			<id>dehuizheng</id>
-			<name>Dehui Zheng</name>
-			<email>dehui.zheng at vipshop.com</email>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<timezone>+8</timezone>
-		</developer>
 	</developers>
-
 </project>
