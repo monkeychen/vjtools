@@ -9,7 +9,7 @@ import org.dozer.Mapper;
 import com.vip.vjtools.vjkit.collection.ArrayUtil;
 
 /**
- * 实现深度的BeanOfClasssA<->BeanOfClassB复制
+ * 实现深度的BeanOfClassA<->BeanOfClassB复制
  * 
  * 不要使用Apache Common BeanUtils进行类复制，每次就行反射查询对象的属性列表, 非常缓慢.
  * 
@@ -40,13 +40,13 @@ public class BeanMapper {
 	 * 简单的复制出新对象ArrayList
 	 */
 	public static <S, D> List<D> mapList(Iterable<S> sourceList, Class<D> destinationClass) {
-		List<D> destionationList = new ArrayList<D>();
+		List<D> destinationList = new ArrayList<D>();
 		for (S source : sourceList) {
 			if (source != null) {
-				destionationList.add(mapper.map(source, destinationClass));
+				destinationList.add(mapper.map(source, destinationClass));
 			}
 		}
-		return destionationList;
+		return destinationList;
 	}
 
 	/**

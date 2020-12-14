@@ -3,13 +3,13 @@ package com.vip.vjtools.vjtop.data;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.vip.vjtools.vjtop.Utils;
+import com.vip.vjtools.vjtop.util.Utils;
 
 import sun.management.counter.Counter;
+import sun.management.counter.LongCounter;
 import sun.management.counter.perf.PerfInstrumentation;
 import sun.misc.Perf;
 
@@ -19,9 +19,11 @@ public class PerfData {
 	// PerfData中的时间相关数据以tick表示，每个tick的时长与计算机频率相关
 	private final double nanosPerTick;
 
-	public static PerfData connect(long pid) {
+	private final Map<String, Counter> counters;
+
+	public static PerfData connect(int pid) {
 		try {
-			return new PerfData((int) pid);
+			return new PerfData(pid);
 		} catch (ThreadDeath e) {
 			throw e;
 		} catch (OutOfMemoryError e) {
@@ -34,12 +36,14 @@ public class PerfData {
 	private PerfData(int pid) throws IOException {
 		ByteBuffer bb = Perf.getPerf().attach(pid, "r");
 		instr = new PerfInstrumentation(bb);
-		long hz = ((sun.management.counter.LongCounter) instr.findByPattern("sun.os.hrt.frequency").get(0)).longValue();
+		counters = buildAllCounters();
+
+		long hz = (Long) counters.get("sun.os.hrt.frequency").getValue();
 		nanosPerTick = ((double) TimeUnit.SECONDS.toNanos(1)) / hz;
 	}
 
-	public Map<String, Counter> getAllCounters() {
-		Map<String, Counter> result = new HashMap<String, Counter>(512);
+	private Map<String, Counter> buildAllCounters() {
+		Map<String, Counter> result = new HashMap<>(512);
 
 		for (Counter c : instr.getAllCounters()) {
 			result.put(c.getName(), c);
@@ -48,23 +52,17 @@ public class PerfData {
 		return result;
 	}
 
-	/**
-	 * 按Pattern返回唯一Counter
-	 */
-	public Counter findCounter(String pattern) {
-		return instr.findByPattern(pattern).get(0);
+	public Map<String, Counter> getAllCounters() {
+		return counters;
 	}
 
-	/**
-	 * 按Pattern返回所有Counter
-	 */
-	public List<Counter> findByPattern(String pattern) {
-		return instr.findByPattern(pattern);
+	public Counter findCounter(String counterName) {
+		return counters.get(counterName);
 	}
 
-	public long tickToMills(Counter tickCounter) {
+	public long tickToMills(LongCounter tickCounter) {
 		if (tickCounter.getUnits() == sun.management.counter.Units.TICKS) {
-			return (long) ((nanosPerTick * (Long) tickCounter.getValue()) / Utils.NANOS_TO_MILLS);
+			return (long) ((nanosPerTick * tickCounter.longValue()) / Utils.NANOS_TO_MILLS);
 		} else {
 			throw new IllegalArgumentException(tickCounter.getName() + " is not a ticket counter");
 		}

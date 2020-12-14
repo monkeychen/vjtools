@@ -102,8 +102,9 @@ public class MapUtil {
 	 * 
 	 * 未初始化数组大小, 默认为16个桶.
 	 * 
-	 * @see com.google.common.collect.Maps#newHashMap()
+	 * @deprecated JDK7开始已经简化 
 	 */
+	@Deprecated
 	public static <K, V> HashMap<K, V> newHashMap() {
 		return new HashMap<K, V>();
 	}
@@ -115,7 +116,7 @@ public class MapUtil {
 	 * 
 	 * 加载因子也是HashMap中减少Hash冲突的重要一环，如果读写频繁，总记录数不多的Map，可以比默认值0.75进一步降低，建议0.5
 	 * 
-	 * @see com.google.common.collect.Maps#newHashMap(int)
+	 * @see com.google.common.collect.Maps#newHashMap
 	 */
 	public static <K, V> HashMap<K, V> newHashMapWithCapacity(int expectedSize, float loadFactor) {
 		int finalSize = (int) (expectedSize / loadFactor + 1.0F);
@@ -215,12 +216,12 @@ public class MapUtil {
 
 	/**
 	 * 返回一个空的结构特殊的Map，节约空间.
-	 * 
+	 *
 	 * 注意返回的Map不可写, 写入会抛出UnsupportedOperationException.
 	 * 
 	 * @see java.util.Collections#emptyMap()
 	 */
-	public static final <K, V> Map<K, V> emptyMap() {
+	public static <K, V> Map<K, V> emptyMap() {
 		return Collections.emptyMap();
 	}
 

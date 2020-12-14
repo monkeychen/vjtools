@@ -1,11 +1,12 @@
 package com.vip.vjtools.vjkit.time;
 
-import com.vip.vjtools.vjkit.base.annotation.NotNull;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.time.DateUtils;
 
-import java.util.Calendar;
-import java.util.Date;
+import com.vip.vjtools.vjkit.base.annotation.NotNull;
 
 /**
  * 日期工具类.
@@ -191,7 +192,7 @@ public class DateUtil {
 
 	///// 获取日期的位置//////
 	/**
-	 * 获得日期是一周的第几天. 已改为中国习惯，1 是Monday，而不是Sundays.
+	 * 获得日期是一周的第几天. 已改为中国习惯，1 是Monday，而不是Sunday.
 	 */
 	public static int getDayOfWeek(@NotNull final Date date) {
 		int result = getWithMondayFirst(date, Calendar.DAY_OF_WEEK);

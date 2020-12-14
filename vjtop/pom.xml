@@ -4,7 +4,7 @@
 
 	<groupId>com.vip.vjtools</groupId>
 	<artifactId>vjtop</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<name>vjtop</name>
 	<description>Linux top-like JVM info and busy threads monitoring tools</description>
 
@@ -16,6 +16,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 
 	<dependencies>
@@ -24,12 +25,18 @@
 			<artifactId>jopt-simple</artifactId>
 			<version>4.9</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.sun</groupId>
 			<artifactId>tools</artifactId>
 			<version>${java.version}</version>
 			<scope>system</scope>
 			<systemPath>${toolsjar}</systemPath>
+		</dependency> -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -138,6 +145,31 @@
 				</plugins>
 			</build>
 		</profile>
+		
+		
+		<profile>
+	      <id>jdk9</id>
+	      <activation>
+	        <jdk>[1.9,)</jdk>
+	      </activation>
+	      <dependencies/>
+	    </profile>
+	    <profile>
+	      <id>default-jdk</id>
+	      <activation>
+	        <jdk>(,1.8]</jdk>
+	      </activation>
+	      <dependencies>
+	        <dependency>
+				<groupId>com.sun</groupId>
+				<artifactId>tools</artifactId>
+				<version>${java.version}</version>
+				<scope>system</scope>
+				<systemPath>${toolsjar}</systemPath>
+			</dependency>
+	      </dependencies>
+	    </profile>
+		
 	</profiles>
 	
 	<distributionManagement>

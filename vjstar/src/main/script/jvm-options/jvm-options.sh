@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # 使用指南：
@@ -78,7 +77,7 @@ GC_OPTS="$GC_OPTS -XX:+UnlockDiagnosticVMOptions -XX:ParGCCardsPerStrideChunk=10
 if [ -d /dev/shm/ ]; then
     GC_LOG_FILE=/dev/shm/gc-${APPID}.log
 else
-	GC_LOG_FILE=${LOGDIR}/gc-${APPID}.log
+    GC_LOG_FILE=${LOGDIR}/gc-${APPID}.log
 fi
 
 
@@ -94,8 +93,19 @@ GCLOG_OPTS="-Xloggc:${GC_LOG_FILE} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -X
 
 #打印GC原因，JDK8默认打开
 if [[ "$JAVA_VERSION" < "1.8" ]]; then
-	GCLOG_OPTS="$GCLOG_OPTS -XX:+PrintGCCause"
+    GCLOG_OPTS="$GCLOG_OPTS -XX:+PrintGCCause"
 fi
+
+
+# 打印GC前后的各代大小
+#GCLOG_OPTS="$GCLOG_OPTS -XX:+PrintHeapAtGC"
+
+# 打印存活区每段年龄的大小
+#GCLOG_OPTS="$GCLOG_OPTS -XX:+PrintTenuringDistribution"
+
+# 如果发生晋升失败，观察老生代的碎片
+#GCLOG_OPTS="$GCLOG_OPTS -XX:+UnlockDiagnosticVMOptions -XX:PrintFLSStatistics=2"
+
 
 # 打印安全点日志，找出GC日志里非GC的停顿的原因
 #GCLOG_OPTS="$GCLOG_OPTS -XX:+PrintSafepointStatistics -XX:PrintSafepointStatisticsCount=1 -XX:+UnlockDiagnosticVMOptions -XX:-DisplayVMOutput -XX:+LogVMOutput -XX:LogFile=/dev/shm/vm-${APPID}.log"
@@ -125,9 +135,12 @@ SHOOTING_OPTS="-XX:+PrintCommandLineFlags -XX:-OmitStackTraceInFastThrow -XX:Err
 # OOM 时进行HeapDump，但此时会产生较高的连续IO，如果是容器环境，有可能会影响他的容器
 #SHOOTING_OPTS="$SHOOTING_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${LOGDIR}/"
 
+# async-profiler 火焰图效果更好的参数
+#SHOOTING_OPTS="$SHOOTING_OPTS -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints"
 
 # 在非生产环境，打开JFR进行性能记录（生产环境要收License的哈）
 #SHOOTING_OPTS="$SHOOTING_OPTS -XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints"
+
 
 
 ## JMX Options##
